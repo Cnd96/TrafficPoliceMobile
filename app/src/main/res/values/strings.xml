@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Sri Lanka Traffic Police</string>
+    <string name="login">Login</string>
+    <string name="prompt_password">Password</string>
+    <!--offences-->
+    <string name="Section159">Prohibition to distribute advertisements from a vehicle in motion</string>
+    <string name="Section160">Prohibit excessive use of noise from a vehicle</string>
+    <string name="Section164">Non-compliance with traffic signs</string>
+    <string name="Section190">Violation of regulations</string>
+    <string name="Section148">Failure to comply with road rules</string>
+    <string name="Section135">Failure to carry a driving licence when driving</string>
+    <string name="Section191">Prohibition to distribute advertisements from a vehicle in motion</string>
+    <string name="Section142">Prohibition to distribute advertisements from a vehicle in motion</string>
+    <!--driverDetails-->
+    <string name="DriverName">Name :</string>
+    <string name="DriverAddress">Address :</string>
+    <!--<string name="DriverDateOfBirth">DOB</string>-->
+    <string name="DriverDateOfIssue">Issued on :</string>
+    <string name="DriverDateOfExpire">Expire on :</string>
+    <string name="DriverCatogeriesOfVehicles">Categories :</string>
+    <string name="DriverLicenseNo">License :</string>
+
+
+</resources>
