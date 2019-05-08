@@ -18,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        OffencesModel.createOffences();
+
         SharedPreferences prefs;
         if(isLogged()){
             prefs=getSharedPreferences(MAIN_PREFS,MODE_PRIVATE);
@@ -40,3 +42,7 @@ public class MainActivity extends AppCompatActivity {
         return policemanName==null? false:true;
     }
 }
+
+
+
+

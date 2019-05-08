@@ -18,6 +18,10 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import cz.msebera.android.httpclient.Header;
 
 public class HomeActivity extends AppCompatActivity {
@@ -84,12 +88,21 @@ public class HomeActivity extends AppCompatActivity {
 
         DriverDetailsModel driver=DriverDetailsModel.getInstance();
         try {
-            driver.setName(jsonObject.getString("Name"));
 
-//            weatherDataModel.mCondition=jsonObject.getJSONArray("weather").getJSONObject(0).getInt("id");
-//            weatherDataModel.mIconName=updateWeatherIcon(weatherDataModel.mCondition);
-//
-//            double tempResult=(jsonObject.getJSONObject("main").getDouble("temp")-273.15);
+            int catogeriesOfVehiclesLength = jsonObject.getJSONArray("CatogeriesOfVehicles").length();
+            ArrayList<String> CategoriesList = new ArrayList<String>();
+
+            for (int i=0;i<catogeriesOfVehiclesLength;i++){
+                CategoriesList.add(jsonObject.getJSONArray("CatogeriesOfVehicles").getString(i));
+            }
+
+            driver.setName(jsonObject.getString("Name"));
+            driver.setAddress(jsonObject.getString("Address"));
+            driver.setDateOfExpire(jsonObject.getString("DateOfExpire"));
+            driver.setDateOfIssue(jsonObject.getString("DateOfIssue"));
+            driver.setLicenseNO(jsonObject.getString("_id"));
+            driver.setCatogeriesOfVehicles(CategoriesList);
+
 
         }catch (JSONException e){
             e.printStackTrace();

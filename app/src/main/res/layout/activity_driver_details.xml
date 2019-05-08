@@ -7,19 +7,6 @@
     tools:context=".DriverDetailsActivity">
 
     <TextView
-        android:id="@+id/txtDriverAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="104dp"
-        android:text="@string/DriverAddress"
-        android:textColor="@android:color/background_dark"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/txtDriverName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,7 +21,7 @@
 
     <TextView
         android:id="@+id/labelDriverName"
-        android:layout_width="268dp"
+        android:layout_width="235dp"
         android:layout_height="69dp"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="8dp"
@@ -50,29 +37,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/labelDriverAddress"
-        android:layout_width="263dp"
-        android:layout_height="68dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="104dp"
-        android:text="84/4 Asiri place Koralawella Moratuwa "
-        android:textColor="@android:color/background_dark"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.893"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/txtDriverLicenseNo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="172dp"
+        android:layout_marginTop="112dp"
         android:text="@string/DriverLicenseNo"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
@@ -83,16 +53,16 @@
         android:id="@+id/labelDriverLicenseNo"
         android:layout_width="109dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="172dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="172dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="172dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="108dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="108dp"
+        android:layout_marginTop="112dp"
         android:text="B2581939"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.975"
+        app:layout_constraintHorizontal_bias="0.007"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -102,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="228dp"
         android:text="@string/DriverCatogeriesOfVehicles"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
@@ -111,27 +81,28 @@
 
     <TextView
         android:id="@+id/labelCategories"
-        android:layout_width="wrap_content"
+        android:layout_width="204dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="260dp"
-        android:text='"A","B1","A1","B","G1"'
+        android:layout_marginTop="228dp"
+        android:text="A1 , A , B , B1 , B2 , D"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.942"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtIssued"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="22dp"
         android:layout_marginLeft="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="216dp"
+        android:layout_marginTop="152dp"
         android:text="@string/DriverDateOfIssue"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
@@ -142,16 +113,16 @@
         android:id="@+id/labelIssued"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="164dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="164dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="216dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="108dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="108dp"
+        android:layout_marginTop="152dp"
         android:text="2015-6-22"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.743"
+        app:layout_constraintHorizontal_bias="0.006"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -159,9 +130,9 @@
         android:id="@+id/txtExpire"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="232dp"
-        android:layout_marginStart="232dp"
-        android:layout_marginTop="216dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="191dp"
         android:text="@string/DriverDateOfExpire"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
@@ -176,12 +147,12 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="216dp"
+        android:layout_marginTop="191dp"
         android:text="2023-5-29"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.394"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
