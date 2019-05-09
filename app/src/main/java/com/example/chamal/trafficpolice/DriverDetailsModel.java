@@ -10,6 +10,8 @@ public class DriverDetailsModel {
     private String DateOfIssue;
     private String DateOfExpire;
     private ArrayList<String> CatogeriesOfVehicles;
+    private ArrayList<DriverDetailsFinesModel> DriverFinesList;
+
 
     private static final DriverDetailsModel ourInstance = new DriverDetailsModel();
 
@@ -66,5 +68,13 @@ public class DriverDetailsModel {
 
     public void setCatogeriesOfVehicles(ArrayList<String> catogeriesOfVehicles) {
         CatogeriesOfVehicles = catogeriesOfVehicles;
+    }
+
+    public ArrayList<DriverDetailsFinesModel> getDriverFinesList() {
+        return DriverFinesList;
+    }
+
+    public void setDriverFinesList(ArrayList<DriverDetailsFinesModel> driverFinesList) {
+        DriverFinesList = driverFinesList;
     }
 }

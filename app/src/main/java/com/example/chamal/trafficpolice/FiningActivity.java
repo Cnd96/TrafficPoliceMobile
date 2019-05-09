@@ -28,7 +28,7 @@ public class FiningActivity extends AppCompatActivity {
 
         Intent myIntent=getIntent();
         String[] offences=myIntent.getStringArrayExtra("offences");
-        Log.d("chance","fine"+offences[0]);
+        Log.d("chance","offences4 success");
 
         for (int i=0; i <offences.length;i++){
             if(OffencesModel.offenceMapping.containsKey(offences[i])) {
@@ -37,7 +37,7 @@ public class FiningActivity extends AppCompatActivity {
                 amountList.add("Rs."+Integer.toString(OffencesModel.offenceMapping.get(offences[i]).getAmount()));
             }
         }
-
+        Log.d("chance","offences5 success");
 
         adapter=new FineOffencesAdapter(this,provisionList,amountList);
         listViewOffences.setAdapter(adapter);

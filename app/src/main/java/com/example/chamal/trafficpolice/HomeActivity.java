@@ -8,19 +8,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -59,7 +55,12 @@ public class HomeActivity extends AppCompatActivity {
 
     private  void getDriverDetails(){
         String driverLicenseNo=mSearchDriverText.getText().toString();
-        if(driverLicenseNo.equals(""))return;
+        if(driverLicenseNo.length()!=8)
+        {
+
+            Toast.makeText(HomeActivity.this,"Wrong license number",Toast.LENGTH_SHORT).show();
+            return;
+        };
 
 
         Log.d("chance","Searching"+driverLicenseNo);
@@ -79,6 +80,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers,Throwable e, JSONObject response){
                 Log.d("chance","fail");
+                Toast.makeText(HomeActivity.this,"Failed To Connect",Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -90,10 +92,21 @@ public class HomeActivity extends AppCompatActivity {
         try {
 
             int catogeriesOfVehiclesLength = jsonObject.getJSONArray("CatogeriesOfVehicles").length();
-            ArrayList<String> CategoriesList = new ArrayList<String>();
-
+            ArrayList<String> categoriesList = new ArrayList<String>();
             for (int i=0;i<catogeriesOfVehiclesLength;i++){
-                CategoriesList.add(jsonObject.getJSONArray("CatogeriesOfVehicles").getString(i));
+                categoriesList.add(jsonObject.getJSONArray("CatogeriesOfVehicles").getString(i));
+            }
+
+            int driverFinesListLength = jsonObject.getJSONArray("fines").length();
+            ArrayList<DriverDetailsFinesModel> driverFinesList = new ArrayList<DriverDetailsFinesModel>();
+
+            for (int i=0;i<driverFinesListLength;i++){
+                driverFinesList.add(new DriverDetailsFinesModel(
+                        jsonObject.getJSONArray("fines").getJSONObject(i).getInt("_id"),
+                        jsonObject.getJSONArray("fines").getJSONObject(i).getInt("amount"),
+                        jsonObject.getJSONArray("fines").getJSONObject(i).getInt("totalAmountPaid"),
+                        jsonObject.getJSONArray("fines").getJSONObject(i).getBoolean("fineStatus"),
+                        jsonObject.getJSONArray("fines").getJSONObject(i).getString("date")));
             }
 
             driver.setName(jsonObject.getString("Name"));
@@ -101,7 +114,8 @@ public class HomeActivity extends AppCompatActivity {
             driver.setDateOfExpire(jsonObject.getString("DateOfExpire"));
             driver.setDateOfIssue(jsonObject.getString("DateOfIssue"));
             driver.setLicenseNO(jsonObject.getString("_id"));
-            driver.setCatogeriesOfVehicles(CategoriesList);
+            driver.setCatogeriesOfVehicles(categoriesList);
+            driver.setDriverFinesList(driverFinesList);
 
 
         }catch (JSONException e){

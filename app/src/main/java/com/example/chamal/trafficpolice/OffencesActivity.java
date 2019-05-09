@@ -3,6 +3,7 @@ package com.example.chamal.trafficpolice;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,14 +25,15 @@ public class OffencesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ArrayList<String> selectedOffencesList=  getSelectedOffencesList();
-
+                Log.d("chance","offences success");
                 String[] offences=new String[selectedOffencesList.size()];
                 for(int i=0;i<selectedOffencesList.size();i++){
                     offences[i]=selectedOffencesList.get(i);
                 };
-
+                Log.d("chance","offences2 success");
                 Intent finingIntent=new Intent(OffencesActivity.this,FiningActivity.class);
                 finingIntent.putExtra("offences",offences);
+                Log.d("chance","offences3 success");
                 startActivity(finingIntent);
             }
         });
