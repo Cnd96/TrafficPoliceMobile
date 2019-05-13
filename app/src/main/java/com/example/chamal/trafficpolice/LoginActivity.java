@@ -48,9 +48,12 @@ public class LoginActivity extends AppCompatActivity {
         if(id.equals("")||password.equals(""))return;
         Toast.makeText(this,"Login in Progress..", Toast.LENGTH_SHORT).show();
         try{
+//            String[] colors = { "blue", "yellow" };
             JSONObject jsonParams = new JSONObject();
             jsonParams.put("policemanId", id);
             jsonParams.put("password", password);
+//            jsonParams.put("colors", colors);
+
 
             StringEntity entity = new StringEntity(jsonParams.toString());
 
@@ -96,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
             prefs.edit().putString(MainActivity.POLICEMAN_ID_KEY,id).apply();
             prefs.edit().putString(MainActivity.POLICEMAN_RANK_KEY,rank).apply();
             prefs.edit().putString(MainActivity.POLICESTATION_NAME_KEY,policeStationName).apply();
+            
         }catch (JSONException e){
             e.printStackTrace();
 

@@ -1,6 +1,9 @@
 package com.example.chamal.trafficpolice;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -55,9 +58,22 @@ public class HomeActivity extends AppCompatActivity {
 
     private  void getDriverDetails(){
         String driverLicenseNo=mSearchDriverText.getText().toString();
+
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            Toast.makeText(HomeActivity.this,"Internet connected",Toast.LENGTH_SHORT).show();
+            connected = true;
+        }
+        else {
+            connected = false;
+            Toast.makeText(HomeActivity.this,"Internet not connected",Toast.LENGTH_SHORT).show();
+            return;
+        }
         if(driverLicenseNo.length()!=8)
         {
-
             Toast.makeText(HomeActivity.this,"Wrong license number",Toast.LENGTH_SHORT).show();
             return;
         };
@@ -81,7 +97,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers,Throwable e, JSONObject response){
                 Log.d("chance","fail");
                 Toast.makeText(HomeActivity.this,"Failed To Connect",Toast.LENGTH_SHORT).show();
-
             }
         });
     }
