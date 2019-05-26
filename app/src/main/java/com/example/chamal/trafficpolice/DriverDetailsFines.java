@@ -1,6 +1,6 @@
 package com.example.chamal.trafficpolice;
 
-public class DriverDetailsFinesModel {
+public class DriverDetailsFines {
 
     private int id;
     private int amount;
@@ -8,7 +8,7 @@ public class DriverDetailsFinesModel {
     private boolean fineStatus;
     private String date;
 
-    public DriverDetailsFinesModel(int id, int amount, int totalAmountPaid, boolean fineStatus, String date) {
+    public DriverDetailsFines(int id, int amount, int totalAmountPaid, boolean fineStatus, String date) {
         this.id = id;
         this.amount = amount;
         this.totalAmountPaid = totalAmountPaid;

@@ -41,7 +41,7 @@ public class DriverDetailsActivity extends AppCompatActivity {
         String txtUnpaidCourtDate="";
         String unpaidCourtTitle="No unpaid fines or court cases";
 
-        DriverDetailsModel driver=DriverDetailsModel.getInstance();
+        DriverDetails driver= DriverDetails.getInstance();
 
         listViewFiness=(ListView) findViewById(R.id.ListView_PaidFines);
         mDriverName=(TextView) findViewById(R.id.labelDriverName);
@@ -75,7 +75,7 @@ public class DriverDetailsActivity extends AppCompatActivity {
         mCategoriesOfVehicle.setText(categoriesListString);
 
 
-        ArrayList<DriverDetailsFinesModel> driverFinesList=driver.getDriverFinesList();
+        ArrayList<DriverDetailsFines> driverFinesList=driver.getDriverFinesList();
         int totalPaidFines=driverFinesList.size();
         Log.d("chance","okayy");
         ArrayList<String> amountList=new ArrayList<>();

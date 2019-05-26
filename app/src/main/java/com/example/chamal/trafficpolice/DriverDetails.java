@@ -2,7 +2,7 @@ package com.example.chamal.trafficpolice;
 
 import java.util.ArrayList;
 
-public class DriverDetailsModel {
+public class DriverDetails {
 
     private String Name;
     private String LicenseNO;
@@ -10,16 +10,16 @@ public class DriverDetailsModel {
     private String DateOfIssue;
     private String DateOfExpire;
     private ArrayList<String> CatogeriesOfVehicles;
-    private ArrayList<DriverDetailsFinesModel> DriverFinesList;
+    private ArrayList<DriverDetailsFines> DriverFinesList;
 
 
-    private static final DriverDetailsModel ourInstance = new DriverDetailsModel();
+    private static final DriverDetails ourInstance = new DriverDetails();
 
-    public static DriverDetailsModel getInstance() {
+    public static DriverDetails getInstance() {
         return ourInstance;
     }
 
-    private DriverDetailsModel() {
+    private DriverDetails() {
     }
 
     public String getName() {
@@ -70,11 +70,11 @@ public class DriverDetailsModel {
         CatogeriesOfVehicles = catogeriesOfVehicles;
     }
 
-    public ArrayList<DriverDetailsFinesModel> getDriverFinesList() {
+    public ArrayList<DriverDetailsFines> getDriverFinesList() {
         return DriverFinesList;
     }
 
-    public void setDriverFinesList(ArrayList<DriverDetailsFinesModel> driverFinesList) {
+    public void setDriverFinesList(ArrayList<DriverDetailsFines> driverFinesList) {
         DriverFinesList = driverFinesList;
     }
 }

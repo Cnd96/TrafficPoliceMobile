@@ -2,12 +2,18 @@ package com.example.chamal.trafficpolice;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -29,10 +35,40 @@ public class HomeActivity extends AppCompatActivity {
     FloatingActionButton mSearchDriverButton;
     Button mCourtCasesButton;
     AutoCompleteTextView mSearchDriverText;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater=getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()){
+            case R.id.LogOut:
+                SharedPreferences preferences =getSharedPreferences(MainActivity.MAIN_PREFS,Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.commit();
+                finish();
+                return true;
+                default:return  false;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+//        final SQLiteDatabase myDb=this.openOrCreateDatabase("Police",MODE_PRIVATE,null);
+//        myDb.execSQL("CREATE TABLE IF NOT EXISTS fines (id INT(8),licenseNo VARCHAR,vehicleNo VARCHAR,time VARCHAR," +
+//                "date VARCHAR,policemanId VARCHAR,total INT(6),fineStatus BOOLEAN,)");
+
+
         mRecordFinesButton=(Button) findViewById(R.id.btnRecordFines);
         mSearchDriverButton=(FloatingActionButton) findViewById(R.id.btnDriverDetailsSearch);
         mCourtCasesButton=(Button) findViewById(R.id.btnCourtCases);
@@ -45,8 +81,6 @@ public class HomeActivity extends AppCompatActivity {
                 getDriverDetails();
             }
         });
-
-
         mRecordFinesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,6 +88,46 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(offenceIntent);
             }
         });
+
+        mCourtCasesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDb();
+            }
+
+        });
+
+    }
+
+    private void showDb(){
+        final SQLiteDatabase myDb=this.openOrCreateDatabase("Police",MODE_PRIVATE,null);
+        myDb.execSQL("CREATE TABLE IF NOT EXISTS fines (fineId VARCHAR,driverLicenseNo VARCHAR,driverVehicleNo VARCHAR,fineTime VARCHAR," +
+                "fineDate VARCHAR,policemanId VARCHAR,totalAmountPaid INT(6),fineStatus BOOLEAN,finePlace VARCHAR,validUntilDate VARCHAR,PRIMARY KEY (fineId))");
+        myDb.execSQL("CREATE TABLE IF NOT EXISTS fineOffences (fid VARCHAR  NOT NULL,offence VARCHAR NOT NULL,FOREIGN KEY (fid) REFERENCES fines(fineId),PRIMARY KEY (fid, offence))");
+
+
+
+        try{
+
+            Cursor c=myDb.rawQuery("SELECT f.fineId, f.driverLicenseNo,f.policemanId, fo.offence\n" +
+                    "FROM fines f INNER JOIN fineOffences fo ON f.fineId = fo.fid",null);
+            int fineIDIndex=c.getColumnIndex("fineId");
+            int driverLicenseNoIndex=c.getColumnIndex("driverLicenseNo");
+            int policemanIdIndex=c.getColumnIndex("policemanId");
+            int offenceIndex=c.getColumnIndex("offence");
+            c.moveToFirst();
+            Log.d("chance",c.getString(fineIDIndex));
+            Log.d("chance",c.getString(driverLicenseNoIndex));
+            Log.d("chance",c.getString(policemanIdIndex));
+
+            while (c!=null){
+                Log.d("chance",c.getString(offenceIndex));
+                c.moveToNext();
+            }
+
+        }catch (Exception e){
+
+        }
     }
 
     private  void getDriverDetails(){
@@ -72,7 +146,11 @@ public class HomeActivity extends AppCompatActivity {
             Toast.makeText(HomeActivity.this,"Internet not connected",Toast.LENGTH_SHORT).show();
             return;
         }
-        if(driverLicenseNo.length()!=8)
+
+
+        boolean x=driverLicenseNo.matches("[A-Z]{1}\\d{7}");
+
+        if(!x)
         {
             Toast.makeText(HomeActivity.this,"Wrong license number",Toast.LENGTH_SHORT).show();
             return;
@@ -103,7 +181,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setDriverDetails(JSONObject jsonObject){
 
-        DriverDetailsModel driver=DriverDetailsModel.getInstance();
+        DriverDetails driver= DriverDetails.getInstance();
         try {
 
             int catogeriesOfVehiclesLength = jsonObject.getJSONArray("CatogeriesOfVehicles").length();
@@ -113,10 +191,10 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             int driverFinesListLength = jsonObject.getJSONArray("fines").length();
-            ArrayList<DriverDetailsFinesModel> driverFinesList = new ArrayList<DriverDetailsFinesModel>();
+            ArrayList<DriverDetailsFines> driverFinesList = new ArrayList<DriverDetailsFines>();
 
             for (int i=0;i<driverFinesListLength;i++){
-                driverFinesList.add(new DriverDetailsFinesModel(
+                driverFinesList.add(new DriverDetailsFines(
                         jsonObject.getJSONArray("fines").getJSONObject(i).getInt("_id"),
                         jsonObject.getJSONArray("fines").getJSONObject(i).getInt("amount"),
                         jsonObject.getJSONArray("fines").getJSONObject(i).getInt("totalAmountPaid"),

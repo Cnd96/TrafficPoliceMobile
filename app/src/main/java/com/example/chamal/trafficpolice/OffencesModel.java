@@ -26,12 +26,12 @@ public class OffencesModel {
         offenceMapping.put("Section155A",new OffencesModel("Excessive emission of smoke and C.",2000,"Section155A"));
         offenceMapping.put("Section152",new OffencesModel("Unobstructed control of vehicle when driving",1000,"Section152"));
         offenceMapping.put("Section158",new OffencesModel("Failure to wear protective helmets when driving",1000,"Section158"));
-        offenceMapping.put("Section159",new OffencesModel("Prohibition to distribute advertisements from a vehicle in motion",2000,"Section159"));
+        offenceMapping.put("Section159",new OffencesModel("Prohibition to distribute advertisements from a vehicle in motion",1000,"Section159"));
         offenceMapping.put("Section160",new OffencesModel("Prohibit excessive use of noise from a vehicle",1000,"Section160"));
         offenceMapping.put("Section164",new OffencesModel("Non-compliance with traffic signs",1000,"Section164"));
-        offenceMapping.put("Section190",new OffencesModel("Violation of regulations",1000,"Section190"));
+        offenceMapping.put("Section190",new OffencesModel("Violation of regulations",2000,"Section190"));
         offenceMapping.put("Section148",new OffencesModel("Failure to comply with road rules",1000,"Section148"));
-        offenceMapping.put("Section135",new OffencesModel("Failure to carry a driving licence when driving",2000,"Section135"));
+        offenceMapping.put("Section135",new OffencesModel("Failure to carry a driving licence when driving",3000,"Section135"));
 
     }
 

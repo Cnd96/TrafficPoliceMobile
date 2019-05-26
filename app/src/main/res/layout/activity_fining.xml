@@ -15,12 +15,29 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="64dp"
         android:ems="10"
         app:layout_constraintBottom_toTopOf="@+id/passwordText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toEndOf="@+id/txtFineDriverLicenseNo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/labelFineID"
+        android:layout_width="162dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        app:layout_constraintBottom_toTopOf="@+id/passwordText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.357"
+        app:layout_constraintStart_toEndOf="@+id/txtFindId"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -32,12 +49,29 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="108dp"
         android:ems="10"
         app:layout_constraintBottom_toTopOf="@+id/passwordText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.132"
         app:layout_constraintStart_toEndOf="@+id/txtFineVehicleNo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/labelFinePlace"
+        android:layout_width="261dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="152dp"
+        android:ems="10"
+        app:layout_constraintBottom_toTopOf="@+id/passwordText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/txtPlace"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -48,12 +82,12 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="212dp"
         android:text="2015-4-16"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.024"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/txtFineDate"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,13 +95,11 @@
         android:id="@+id/labelFineTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="212dp"
         android:text="01:31 AM"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/txtFineDate2"
+        app:layout_constraintStart_toEndOf="@+id/txtFineTime"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -78,7 +110,7 @@
         android:layout_marginLeft="32dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="80dp"
         android:text="License No:"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
@@ -95,7 +127,7 @@
         android:layout_marginLeft="32dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="124dp"
         android:text="Vehicle No:"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
@@ -110,7 +142,7 @@
         android:layout_height="24dp"
         android:layout_marginLeft="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="212dp"
         android:text="Date :"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
@@ -118,12 +150,38 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtFineDate2"
+        android:id="@+id/txtPlace"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="168dp"
+        android:text="Place :"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtFindId"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="36dp"
+        android:text="Fine ID :"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtFineTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="36dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="212dp"
         android:text="Time:"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
@@ -138,7 +196,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="208dp"
+        android:layout_marginTop="272dp"
         android:background="#efecec"
         android:divider="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
@@ -168,7 +226,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="360dp"
+        android:layout_marginTop="404dp"
         android:text="Paying on the spot"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"

@@ -1,31 +1,28 @@
 package com.example.chamal.trafficpolice;
 
 public class FineOffences {
-//
-//    private int amount;
-//    private String provision;
-//
-//    public FineOffences( int amount, String provision) {
-//
-//        this.amount = amount;
-//        this.provision = provision;
-//    }
-//
-//    public int getAmount() {
-//        return amount;
-//    }
-//
-//    public void setAmount(int amount) {
-//        this.amount = amount;
-//    }
-//
-//    public String getProvision() {
-//        return provision;
-//    }
-//
-//    public void setProvision(String provision) {
-//        this.provision = provision;
-//    }
 
+    private String fineId;
+    private String[] sectionOfAct;
 
+    public FineOffences(String fineId, String[] sectionOfAct) {
+        this.fineId = fineId;
+        this.sectionOfAct = sectionOfAct;
+    }
+
+    public String getFineId() {
+        return fineId;
+    }
+
+    public void setFineId(String fineId) {
+        this.fineId = fineId;
+    }
+
+    public String[] getSectionOfAct() {
+        return sectionOfAct;
+    }
+
+    public void setSectionOfAct(String[] sectionOfAct) {
+        this.sectionOfAct = sectionOfAct;
+    }
 }
