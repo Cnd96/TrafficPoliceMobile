@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,10 @@ public class OffencesActivity extends AppCompatActivity {
             public void onClick(View view) {
                 ArrayList<String> selectedOffencesList=  getSelectedOffencesList();
 //                Log.d("chance","offences success");
+                if(selectedOffencesList.size()==0){
+                    Toast.makeText(OffencesActivity.this,"Select offences",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String[] offences=new String[selectedOffencesList.size()];
                 for(int i=0;i<selectedOffencesList.size();i++){
                     offences[i]=selectedOffencesList.get(i);

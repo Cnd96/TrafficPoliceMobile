@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             StringEntity entity = new StringEntity(jsonParams.toString());
 
             AsyncHttpClient client=new AsyncHttpClient();
-            client.post(this,"http://192.168.8.135:3000/api/policemenLogin",entity,"application/json",new JsonHttpResponseHandler(){
+            client.post(this,MainActivity.API+"policemenLogin",entity,"application/json",new JsonHttpResponseHandler(){
                 @Override
                 public  void onSuccess(int statusCode, Header[] headers, JSONObject response){
                     Log.d("chance","success");

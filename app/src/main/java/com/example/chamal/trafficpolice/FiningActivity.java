@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import androidx.versionedparcelable.VersionedParcel;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
@@ -102,6 +104,8 @@ public class FiningActivity extends AppCompatActivity {
     }
 
     private void submitFineDetais(String[] offences){
+        Fine fine;
+        FineOffences fineOffences;
         SharedPreferences prefs=getSharedPreferences(MainActivity.MAIN_PREFS,MODE_PRIVATE);
         int totalAmountPaid=0;
         Boolean fineStatus=mcheckBoxFineStatus.isChecked();
@@ -120,8 +124,8 @@ public class FiningActivity extends AppCompatActivity {
         try{
 
             c.setTime(validUntilDateFormat.parse(fineDate));
-        }catch(Exception e){
-            e.printStackTrace();
+        }catch( ParseException e){
+
         }
 
 
@@ -130,38 +134,6 @@ public class FiningActivity extends AppCompatActivity {
         Log.d("chance",fineDate);
         Log.d("chance",validUntilDate);
 
-        boolean fineIdValidity=fineId.matches("\\d{4,7}");
-
-        if(!fineIdValidity)
-        {
-            Toast.makeText(FiningActivity.this,"Wrong Fine Id pattern",Toast.LENGTH_SHORT).show();
-            return;
-        };
-
-        boolean licensNoValidity=driverLicenseNo.matches("[A-Z]{1}\\d{7}");
-
-        if(!licensNoValidity)
-        {
-            Toast.makeText(FiningActivity.this,"Wrong license number",Toast.LENGTH_SHORT).show();
-            return;
-        };
-
-        boolean vehicleValidity1=driverVehicleNo.matches("[A-Za-z]{2}-[A-Za-z]{2}-\\d{4}");
-        boolean vehicleValidity2=driverVehicleNo.matches("[A-Za-z]{2}-[A-Za-z]{3}-\\d{4}");
-
-        if(!(vehicleValidity1||vehicleValidity2))
-        {
-            Toast.makeText(FiningActivity.this,"Wrong vehicle number",Toast.LENGTH_SHORT).show();
-            return;
-        };
-
-        if(finePlace.length()==0)
-        {
-            Toast.makeText(FiningActivity.this,"Enter a place",Toast.LENGTH_SHORT).show();
-            return;
-        };
-
-
         if(mcheckBoxFineStatus.isChecked()){
             for (int i=0; i <offences.length;i++) {
                 totalAmountPaid+=OffencesModel.offenceMapping.get(offences[i]).getAmount();
@@ -169,23 +141,29 @@ public class FiningActivity extends AppCompatActivity {
         }
 
 
-        Fine fine=new Fine(fineId,finePlace,driverLicenseNo,driverVehicleNo,fineTime,validUntilDate,fineDate,policemanId,fineStatus,totalAmountPaid);
-        FineOffences fineOffences=new FineOffences(fineId,offences);
+        try{
+            fine=new Fine(fineId,finePlace,driverLicenseNo,driverVehicleNo,fineTime,validUntilDate,fineDate,policemanId,fineStatus,totalAmountPaid);
+            fineOffences=new FineOffences(fineId,offences);
 
-        boolean connected = false;
-        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            Toast.makeText(FiningActivity.this,"Sending Fine",Toast.LENGTH_SHORT).show();
-            sendFineToServer(fine,fineOffences);
-            connected = true;
-        }
-        else {
-            Toast.makeText(FiningActivity.this,"Offline",Toast.LENGTH_SHORT).show();
-            saveFineInOutBox(fine,fineOffences);
-            connected = false;
-        }
+            boolean connected = false;
+            ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
+            if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                Toast.makeText(FiningActivity.this,"Sending Fine",Toast.LENGTH_SHORT).show();
+                sendFineToServer(fine,fineOffences);
+                connected = true;
+            }
+            else {
+                Toast.makeText(FiningActivity.this,"Offline",Toast.LENGTH_SHORT).show();
+                saveFineInOutBox(fine,fineOffences);
+                connected = false;
+            }
+
+        }catch( Exception e){
+            Toast.makeText(FiningActivity.this,e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+            return;
+        }
 
 
     }
@@ -212,7 +190,7 @@ public class FiningActivity extends AppCompatActivity {
             Log.d("chance",jsArray.toString());
 
             AsyncHttpClient client=new AsyncHttpClient();
-            client.post(this,"http://192.168.8.135:3000/api/fines",entity, "application/json",new JsonHttpResponseHandler(){
+            client.post(this,MainActivity.API+"fines",entity, "application/json",new JsonHttpResponseHandler(){
                 @Override
                 public  void onSuccess(int statusCode, Header[] headers, JSONObject response){
                     Log.d("chance",response.toString());

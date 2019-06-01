@@ -1,5 +1,7 @@
 package com.example.chamal.trafficpolice;
 
+import android.widget.Toast;
+
 public class Fine {
     private String fineId;
     private String finePlace;
@@ -12,24 +14,35 @@ public class Fine {
     private Boolean fineStatus;
     private int totalAmountPaid;
 
-    public Fine(String fineId, String finePlace, String driverLicenseNo, String driverVehicleNo, String fineTime, String validUntilDate, String fineDate, String policemanId, Boolean fineStatus, int totalAmountPaid) {
-        this.fineId = fineId;
-        this.finePlace = finePlace;
-        this.driverLicenseNo = driverLicenseNo;
-        this.driverVehicleNo = driverVehicleNo;
+    public Fine(String fineId, String finePlace, String driverLicenseNo, String driverVehicleNo, String fineTime, String validUntilDate, String fineDate, String policemanId, Boolean fineStatus, int totalAmountPaid) throws Exception {
+
+       try{
+           setFineId(fineId);
+        setFinePlace(finePlace);
+        setDriverLicenseNo(driverLicenseNo);
+        setDriverVehicleNo(driverVehicleNo);
         this.fineTime = fineTime;
         this.validUntilDate = validUntilDate;
         this.fineDate = fineDate;
         this.policemanId = policemanId;
         this.fineStatus = fineStatus;
-        this.totalAmountPaid = totalAmountPaid;
+        this.totalAmountPaid = totalAmountPaid;}
+        catch (Exception e){
+           throw new Exception(e);
+        }
     }
 
     public String getFineId() {
         return fineId;
     }
 
-    public void setFineId(String fineId) {
+    public void setFineId(String fineId) throws Exception {
+
+        boolean fineIdValidity=fineId.matches("\\d{4,7}");
+        if(!fineIdValidity)
+        {
+          throw new Exception("Enter valid Fine ID");
+        };
         this.fineId = fineId;
     }
 
@@ -37,7 +50,11 @@ public class Fine {
         return finePlace;
     }
 
-    public void setFinePlace(String finePlace) {
+    public void setFinePlace(String finePlace) throws Exception {
+        if(finePlace.length()==0)
+        {
+            throw new Exception("Enter a place");
+        };
         this.finePlace = finePlace;
     }
 
@@ -45,7 +62,14 @@ public class Fine {
         return driverLicenseNo;
     }
 
-    public void setDriverLicenseNo(String driverLicenseNo) {
+    public void setDriverLicenseNo(String driverLicenseNo) throws Exception {
+
+        boolean licensNoValidity=driverLicenseNo.matches("[A-Z]{1}\\d{7}");
+
+        if(!licensNoValidity)
+        {
+            throw new Exception("Wrong license number");
+        };
         this.driverLicenseNo = driverLicenseNo;
     }
 
@@ -53,7 +77,15 @@ public class Fine {
         return driverVehicleNo;
     }
 
-    public void setDriverVehicleNo(String driverVehicleNo) {
+    public void setDriverVehicleNo(String driverVehicleNo) throws Exception {
+
+        boolean vehicleValidity1=driverVehicleNo.matches("[A-Za-z]{2}-[A-Za-z]{2}-\\d{4}");
+        boolean vehicleValidity2=driverVehicleNo.matches("[A-Za-z]{2}-[A-Za-z]{3}-\\d{4}");
+
+        if(!(vehicleValidity1||vehicleValidity2))
+        {
+            throw new Exception("Wrong vehicle number");
+        };
         this.driverVehicleNo = driverVehicleNo;
     }
 

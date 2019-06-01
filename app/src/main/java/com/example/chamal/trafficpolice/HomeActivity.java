@@ -22,12 +22,14 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -109,25 +111,137 @@ public class HomeActivity extends AppCompatActivity {
 
         try{
 
-            Cursor c=myDb.rawQuery("SELECT f.fineId, f.driverLicenseNo,f.policemanId, fo.offence\n" +
-                    "FROM fines f INNER JOIN fineOffences fo ON f.fineId = fo.fid",null);
-            int fineIDIndex=c.getColumnIndex("fineId");
-            int driverLicenseNoIndex=c.getColumnIndex("driverLicenseNo");
-            int policemanIdIndex=c.getColumnIndex("policemanId");
-            int offenceIndex=c.getColumnIndex("offence");
-            c.moveToFirst();
-            Log.d("chance",c.getString(fineIDIndex));
-            Log.d("chance",c.getString(driverLicenseNoIndex));
-            Log.d("chance",c.getString(policemanIdIndex));
+            Cursor c1=myDb.rawQuery("SELECT fineId from fines",null);
+            int noOfFines=c1.getCount();
+//            Log.d("chance",   Integer.toString(noOfFines));
+            if(noOfFines ==0){
+                Toast.makeText(HomeActivity.this,"No Outbox",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int fineIdIndexofFines=c1.getColumnIndex("fineId");
+            c1.moveToFirst();
 
-            while (c!=null){
-                Log.d("chance",c.getString(offenceIndex));
-                c.moveToNext();
+            for(int i=0;i<noOfFines;i++){
+                Cursor c=myDb.rawQuery("SELECT f.fineId, f.finePlace,f.driverLicenseNo,f.driverVehicleNo,f.fineTime" +
+                        ",f.validUntilDate,f.fineDate,f.policemanId,f.fineStatus,f.totalAmountPaid ,fo.offence\n" +
+                        "FROM fines f INNER JOIN fineOffences fo ON f.fineId = fo.fid where f.fineId='"+c1.getString(fineIdIndexofFines)+"'",null);
+
+                int fineIDIndex=c.getColumnIndex("fineId");
+                int finePlaceIndex=c.getColumnIndex("finePlace");
+                int driverLicenseNoIndex=c.getColumnIndex("driverLicenseNo");
+                int driverVehicleNoIndex=c.getColumnIndex("driverVehicleNo");
+                int fineTimeIndex=c.getColumnIndex("fineTime");
+                int policemanIdIndex=c.getColumnIndex("policemanId");
+                int offenceIndex=c.getColumnIndex("offence");
+                int validUntilDateIndex=c.getColumnIndex("validUntilDate");
+                int fineDateIndex=c.getColumnIndex("fineDate");
+                int fineStatusIndex=c.getColumnIndex("fineStatus");
+                int totalAmountPaid=c.getColumnIndex("totalAmountPaid");
+                int noOfOffences=c.getCount();
+                String[] offences=new String[noOfOffences];
+                c.moveToFirst();
+//                Log.d("chance",   Integer.toString(noOfOffences));
+                String fineId=c.getString(fineIDIndex);
+                Fine fine=new Fine(c.getString(fineIDIndex),c.getString(finePlaceIndex),c.getString(driverLicenseNoIndex),c.getString(driverVehicleNoIndex),
+                        c.getString(fineTimeIndex),c.getString(validUntilDateIndex),c.getString(fineDateIndex),c.getString(policemanIdIndex),Boolean.valueOf(c.getString(fineStatusIndex)),
+                        Integer.valueOf(c.getString(totalAmountPaid)));
+
+                for(int j=0;j<noOfOffences;j++){
+                    offences[j]=c.getString(offenceIndex);
+
+                    Log.d("chance",c.getString(fineIDIndex)+" "+
+                            c.getString(driverLicenseNoIndex)+" "+
+                            c.getString(policemanIdIndex)+" "+
+                            c.getString(finePlaceIndex)+" "+
+                            c.getString(fineTimeIndex)+" "+
+                            c.getString(validUntilDateIndex)+" "+
+                            c.getString(fineDateIndex)+" "+
+                            c.getString(fineStatusIndex)+" "+
+                            c.getString(totalAmountPaid)+" "+
+                            c.getString(offenceIndex)
+                    );
+
+                    c.moveToNext();
+                }
+                FineOffences fineOffences=new FineOffences(fineId,offences);
+                myDb.execSQL("DELETE from fines where fineId='"+fineId+"'");
+                myDb.execSQL("DELETE from fineOffences where fid='"+fineId+"'");
+                Log.d("chance",fineId);
+                boolean connected = false;
+                ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+//                if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+//                        connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
+//                {
+//
+//                    Toast.makeText(HomeActivity.this,"Sending Fine",Toast.LENGTH_SHORT).show();
+//                    try{
+//
+//                        JSONArray jsArray = new JSONArray(fineOffences.getSectionOfAct());
+//
+////            String[] fineOffences =offences;
+//                        JSONObject jsonParams = new JSONObject();
+//                        jsonParams.put("fineId", fine.getFineId());
+//                        jsonParams.put("place", fine.getFinePlace());
+//                        jsonParams.put("licenseNo", fine.getDriverLicenseNo());
+//                        jsonParams.put("vehicleNo", fine.getDriverVehicleNo());
+//                        jsonParams.put("offences",jsArray);
+//                        jsonParams.put("time", fine.getFineTime());
+//                        jsonParams.put("place", fine.getFinePlace());
+//                        jsonParams.put("validUntil", fine.getValidUntilDate());
+//                        jsonParams.put("date", fine.getFineDate());
+//                        jsonParams.put("policemanId", fine.getPolicemanId());
+//                        jsonParams.put("fineStatus",fine.getFineStatus());
+//                        jsonParams.put("totalAmountPaid",fine.getTotalAmountPaid());
+//                        final StringEntity entity = new StringEntity(jsonParams.toString());
+//                        Log.d("chance",jsArray.toString());
+//
+//                        AsyncHttpClient client=new AsyncHttpClient();
+//                        client.post(this,MainActivity.API+"fines",entity, "application/json",new JsonHttpResponseHandler(){
+//
+//                            @Override
+//                            public  void onSuccess(int statusCode, Header[] headers, JSONObject response){
+//                                try {
+//                                    Log.d("chance",response.getString("_id"));
+//                                    Cursor cd1=myDb.rawQuery("DELETE  from fines where fineId='"+response.getString("_id")+"'",null);
+//                                    Cursor cd=myDb.rawQuery("DELETE  from fineOffences where fid='"+response.getString("_id")+"'",null);
+//                                }catch (JSONException e){
+//                                    e.printStackTrace();
+//
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(int statusCode, Header[] headers,Throwable e, JSONObject response){
+//                                Log.d("chance","fail");
+//                            }
+//                            @Override
+//                            public void onRetry(int retryNo) {
+//                                Log.d("chance","fail");
+//                            }
+//
+//                        });
+//                    }catch (Exception e){
+//                        Log.d("chance","exception");
+//                        e.printStackTrace();
+//                    }
+//                }
+//                else {
+//
+//                    connected = false;
+//                }
+
+
+                Log.d("chance", "next fine");
+                c1.moveToNext();
+
             }
 
-        }catch (Exception e){
 
+        }catch (Exception e){
+            Log.d("chance", e.getMessage());
         }
+        Log.d("chance", "sent");
     }
 
     private  void getDriverDetails(){
