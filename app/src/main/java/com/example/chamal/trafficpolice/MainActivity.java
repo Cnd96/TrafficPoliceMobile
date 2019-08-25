@@ -12,8 +12,9 @@ public class MainActivity extends AppCompatActivity {
     public static final String POLICESTATION_NAME_KEY = "PoliceStationName";
     public static final String POLICEMAN_ID_KEY = "PolicemanId";
     public static final String POLICEMAN_RANK_KEY = "PolicemanRank";
-    public static final String API="http://192.168.8.135:3000/api/";
-
+    public static final String HomeIP ="http://192.168.8.135:3000/api/";
+    public static final String PhoneIP ="http://192.168.43.105:3000/api/";
+    public static final String KelaniIP ="http://172.16.41.71:3000/api/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

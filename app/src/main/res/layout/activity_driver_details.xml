@@ -266,27 +266,13 @@
         app:layout_constraintStart_toEndOf="@+id/txtUnpaidCourtDate"
         app:layout_constraintTop_toTopOf="@+id/view2" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="353dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <TextView
         android:id="@+id/LabelPaidFinesTotal"
         android:layout_width="10dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="290dp"
+        android:layout_marginTop="296dp"
         android:text="5"
         android:textColor="@android:color/darker_gray"
         android:textSize="18sp"
@@ -299,10 +285,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="290dp"
+        android:layout_marginTop="296dp"
         android:text="Total Paid Fines"
         android:textColor="@android:color/darker_gray"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -314,7 +301,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.69"
         app:layout_constraintStart_toStartOf="parent"

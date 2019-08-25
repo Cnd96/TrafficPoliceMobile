@@ -32,6 +32,8 @@ public class OffencesModel {
         offenceMapping.put("Section190",new OffencesModel("Violation of regulations",2000,"Section190"));
         offenceMapping.put("Section148",new OffencesModel("Failure to comply with road rules",1000,"Section148"));
         offenceMapping.put("Section135",new OffencesModel("Failure to carry a driving licence when driving",3000,"Section135"));
+        offenceMapping.put("Section162",new OffencesModel("Failure to obey directions and signals of police officers",1000,"Section162"));
+        offenceMapping.put("Section166",new OffencesModel("Not halting or parking of motor vehicles on road",1000,"Section166"));
 
     }
 

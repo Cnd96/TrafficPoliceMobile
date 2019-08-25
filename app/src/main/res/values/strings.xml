@@ -2,6 +2,8 @@
     <string name="app_name">Sri Lanka Traffic Police</string>
     <string name="login">Login</string>
     <string name="prompt_password">Password</string>
+    <string name="phoneNumber">Phone Number</string>
+    <string name="sendSms">Send SMS</string>
     <!--offences-->
 
     <string name="Section140">Non-compliance with Speed limits provisions</string>
@@ -17,6 +19,8 @@
     <string name="Section135">Failure to carry a driving licence when driving</string>
     <string name="Section160">Prohibit excessive use of noise from a vehicle</string>
     <string name="Section159">Prohibition to distribute advertisements from a vehicle in motion</string>
+    <string name="Section162">Failure to obey directions and signals of police officers</string>
+    <string name="Section166">Not halting or parking of motor vehicles on road</string>
 
     <!--driverDetails-->
     <string name="DriverName">Name :</string>

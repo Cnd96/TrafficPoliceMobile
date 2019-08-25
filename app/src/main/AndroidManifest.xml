@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,7 +24,9 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".OffencesActivity" />
         <activity android:name=".DriverDetailsActivity" />
-        <activity android:name=".FiningActivity"></activity>
+        <activity android:name=".FiningActivity" />
+        <activity android:name=".OutboxActivity" />
+        <activity android:name=".SendSms"></activity>
     </application>
 
 </manifest>

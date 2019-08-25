@@ -13,8 +13,12 @@ public class Fine {
     private String policemanId;
     private Boolean fineStatus;
     private int totalAmountPaid;
+    private String paidRecordedBy;
+    private String unpaidRecordedBy;
 
-    public Fine(String fineId, String finePlace, String driverLicenseNo, String driverVehicleNo, String fineTime, String validUntilDate, String fineDate, String policemanId, Boolean fineStatus, int totalAmountPaid) throws Exception {
+    public Fine(String fineId, String driverLicenseNo, String driverVehicleNo, String finePlace, String fineTime,
+                String validUntilDate, String fineDate, String policemanId, Boolean fineStatus,
+                int totalAmountPaid,String paidRecordedBy,String unpaidRecordedBy) throws Exception {
 
        try{
            setFineId(fineId);
@@ -26,7 +30,10 @@ public class Fine {
         this.fineDate = fineDate;
         this.policemanId = policemanId;
         this.fineStatus = fineStatus;
-        this.totalAmountPaid = totalAmountPaid;}
+        this.totalAmountPaid = totalAmountPaid;
+       this.paidRecordedBy=paidRecordedBy;
+       this.unpaidRecordedBy=unpaidRecordedBy;
+       }
         catch (Exception e){
            throw new Exception(e);
         }
@@ -64,9 +71,10 @@ public class Fine {
 
     public void setDriverLicenseNo(String driverLicenseNo) throws Exception {
 
-        boolean licensNoValidity=driverLicenseNo.matches("[A-Z]{1}\\d{7}");
+        boolean licensNoValidity=driverLicenseNo.matches("[B]{1}\\d{7}");
+        boolean licensNoValidity2=driverLicenseNo.matches("[N][o]");
 
-        if(!licensNoValidity)
+        if(!(licensNoValidity||licensNoValidity2))
         {
             throw new Exception("Wrong license number");
         };
@@ -81,8 +89,11 @@ public class Fine {
 
         boolean vehicleValidity1=driverVehicleNo.matches("[A-Za-z]{2}-[A-Za-z]{2}-\\d{4}");
         boolean vehicleValidity2=driverVehicleNo.matches("[A-Za-z]{2}-[A-Za-z]{3}-\\d{4}");
+        boolean vehicleValidity3=driverVehicleNo.matches("\\d{1}-[A-Za-z]{3}-\\d{4}");
+        boolean vehicleValidity4=driverVehicleNo.matches("\\d{2}-\\d{4}");
+        boolean vehicleValidity5=driverVehicleNo.matches("[N][o]");
 
-        if(!(vehicleValidity1||vehicleValidity2))
+        if(!(vehicleValidity1||vehicleValidity2||vehicleValidity3||vehicleValidity4||vehicleValidity5))
         {
             throw new Exception("Wrong vehicle number");
         };
@@ -135,5 +146,21 @@ public class Fine {
 
     public void setTotalAmountPaid(int totalAmountPaid) {
         this.totalAmountPaid = totalAmountPaid;
+    }
+
+    public String getPaidRecordedBy() {
+        return paidRecordedBy;
+    }
+
+    public void setPaidRecordedBy(String paidRecordedBy) {
+        this.paidRecordedBy = paidRecordedBy;
+    }
+
+    public String getUnpaidRecordedBy() {
+        return unpaidRecordedBy;
+    }
+
+    public void setUnpaidRecordedBy(String unpaidRecordedBy) {
+        this.unpaidRecordedBy = unpaidRecordedBy;
     }
 }

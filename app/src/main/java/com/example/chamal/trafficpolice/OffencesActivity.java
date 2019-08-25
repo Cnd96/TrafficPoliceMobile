@@ -12,7 +12,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class OffencesActivity extends AppCompatActivity {
-    CheckBox[] mcheckBox=new CheckBox[13];
+    CheckBox[] mcheckBox=new CheckBox[15];
 
 
     @Override
@@ -71,6 +71,9 @@ public class OffencesActivity extends AppCompatActivity {
         mcheckBox[10]=(CheckBox) findViewById(R.id.checkBox10);
         mcheckBox[11]=(CheckBox) findViewById(R.id.checkBox11);
         mcheckBox[12]=(CheckBox) findViewById(R.id.checkBox12);
+        mcheckBox[13]=(CheckBox) findViewById(R.id.checkBox13);
+        mcheckBox[14]=(CheckBox) findViewById(R.id.checkBox14);
+
     }
 
 }

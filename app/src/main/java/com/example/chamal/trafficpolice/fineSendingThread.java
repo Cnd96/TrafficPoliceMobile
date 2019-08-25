@@ -2,15 +2,12 @@ package com.example.chamal.trafficpolice;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.net.Socket;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -21,11 +18,11 @@ public class fineSendingThread implements Runnable {
     private Context context;
 
 
-    public fineSendingThread(Fine fine,FineOffences fineOffences,Context context) {
-        this.fine = fine;
-        this.fineOffences = fineOffences;
-        this.context = context;
-    }
+//    public fineSendingThread(Fine fine,FineOffences fineOffences,Context context) {
+//        this.fine = fine;
+//        this.fineOffences = fineOffences;
+//        this.context = context;
+//    }
 
     @Override
     public void run() {
@@ -51,7 +48,7 @@ public class fineSendingThread implements Runnable {
             Log.d("chance",jsArray.toString());
 
             AsyncHttpClient client=new AsyncHttpClient();
-            client.post(this.context,MainActivity.API+"fines",entity, "application/json",new JsonHttpResponseHandler(){
+            client.post(this.context,MainActivity.HomeIP +"fines",entity, "application/json",new JsonHttpResponseHandler(){
                 @Override
                 public  void onSuccess(int statusCode, Header[] headers, JSONObject response){
                     Log.d("chance",response.toString());

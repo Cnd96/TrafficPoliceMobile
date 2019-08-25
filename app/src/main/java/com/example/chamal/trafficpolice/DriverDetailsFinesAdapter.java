@@ -18,7 +18,7 @@ public class DriverDetailsFinesAdapter extends ArrayAdapter<String> {
     private ArrayList<String> date;
 
     public DriverDetailsFinesAdapter(@NonNull Activity context, ArrayList<String> fineId, ArrayList<String> amount, ArrayList<String> date) {
-        super(context, R.layout.offence_row,fineId);
+        super(context, R.layout.fine_row,fineId);
         this.context = context;
         this.fineId=fineId;
         this.amount=amount;

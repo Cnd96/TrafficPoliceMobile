@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -20,7 +19,6 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,13 +26,10 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
-import androidx.versionedparcelable.VersionedParcel;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
@@ -116,13 +111,14 @@ public class FiningActivity extends AppCompatActivity {
         String finePlace=mFinePlace.getText().toString();
         String fineId=mFineId.getText().toString();
         String policemanId=prefs.getString(MainActivity.POLICEMAN_ID_KEY,null);
+        String unpaidRecodedBy=policemanId;
+        String paidRecordedBy="no";
         Log.d("chance",fineTime);
 
 
         SimpleDateFormat validUntilDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         try{
-
             c.setTime(validUntilDateFormat.parse(fineDate));
         }catch( ParseException e){
 
@@ -138,11 +134,13 @@ public class FiningActivity extends AppCompatActivity {
             for (int i=0; i <offences.length;i++) {
                 totalAmountPaid+=OffencesModel.offenceMapping.get(offences[i]).getAmount();
             }
+            paidRecordedBy=policemanId;
         }
 
 
         try{
-            fine=new Fine(fineId,finePlace,driverLicenseNo,driverVehicleNo,fineTime,validUntilDate,fineDate,policemanId,fineStatus,totalAmountPaid);
+            fine=new Fine(fineId,driverLicenseNo,driverVehicleNo,finePlace,fineTime,
+                    validUntilDate,fineDate,policemanId,fineStatus,totalAmountPaid,paidRecordedBy,unpaidRecodedBy);
             fineOffences=new FineOffences(fineId,offences);
 
             boolean connected = false;
@@ -161,17 +159,17 @@ public class FiningActivity extends AppCompatActivity {
             }
 
         }catch( Exception e){
-            Toast.makeText(FiningActivity.this,e.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(FiningActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
             return;
         }
 
 
     }
 
-    private void sendFineToServer(Fine fine,FineOffences fineOffences){
+    private void sendFineToServer(final Fine fine, FineOffences fineOffences){
         try{
             JSONArray jsArray = new JSONArray(fineOffences.getSectionOfAct());
-
+//
 //            String[] fineOffences =offences;
             JSONObject jsonParams = new JSONObject();
             jsonParams.put("fineId", fine.getFineId());
@@ -183,20 +181,28 @@ public class FiningActivity extends AppCompatActivity {
             jsonParams.put("place", fine.getFinePlace());
             jsonParams.put("validUntil", fine.getValidUntilDate());
             jsonParams.put("date", fine.getFineDate());
+            jsonParams.put("paidDate", fine.getFineDate());
             jsonParams.put("policemanId", fine.getPolicemanId());
+            jsonParams.put("paidRecordedBy", fine.getPaidRecordedBy());
+            jsonParams.put("unpaidRecordedBy", fine.getUnpaidRecordedBy());
             jsonParams.put("fineStatus",fine.getFineStatus());
             jsonParams.put("totalAmountPaid",fine.getTotalAmountPaid());
             StringEntity entity = new StringEntity(jsonParams.toString());
             Log.d("chance",jsArray.toString());
 
             AsyncHttpClient client=new AsyncHttpClient();
-            client.post(this,MainActivity.API+"fines",entity, "application/json",new JsonHttpResponseHandler(){
+            client.post(this,MainActivity.PhoneIP +"fines",entity, "application/json",new JsonHttpResponseHandler(){
                 @Override
                 public  void onSuccess(int statusCode, Header[] headers, JSONObject response){
                     Log.d("chance",response.toString());
                     Toast.makeText(FiningActivity.this,"Recorded successfully", Toast.LENGTH_SHORT).show();
-                    Intent homeIntent=new Intent(FiningActivity.this,HomeActivity.class);
-                    startActivity(homeIntent);
+                    SmsSingleton smsSingleton=SmsSingleton.getInstance();
+                    smsSingleton.setFineDate(fine.getFineDate());
+                    smsSingleton.setFineId(fine.getFineId());
+                    smsSingleton.setFinePlace(fine.getFinePlace());
+                    smsSingleton.setFineTime(fine.getFineTime());
+                    Intent smsIntent=new Intent(FiningActivity.this,SendSms.class);
+                    startActivity(smsIntent);
                 }
 
                 @Override
@@ -222,12 +228,14 @@ public class FiningActivity extends AppCompatActivity {
 
             Log.d("chance",fine.getFineId());
             final SQLiteDatabase myDb=this.openOrCreateDatabase("Police",MODE_PRIVATE,null);
-            myDb.execSQL("CREATE TABLE IF NOT EXISTS fines (fineId VARCHAR,driverLicenseNo VARCHAR,driverVehicleNo VARCHAR,fineTime VARCHAR,fineDate VARCHAR,policemanId VARCHAR,totalAmountPaid INT(6),fineStatus BOOLEAN,finePlace VARCHAR,validUntilDate VARCHAR,PRIMARY KEY (fineId))");
+            myDb.execSQL("CREATE TABLE IF NOT EXISTS fines (fineId VARCHAR,driverLicenseNo VARCHAR,driverVehicleNo VARCHAR," +
+                    "fineTime VARCHAR,fineDate VARCHAR,policemanId VARCHAR,paidRecordedBy VARCHAR,unpaidRecordedBy VARCHAR,totalAmountPaid INT(6),fineStatus BOOLEAN,finePlace VARCHAR," +
+                    "validUntilDate VARCHAR,PRIMARY KEY (fineId))");
             myDb.execSQL("CREATE TABLE IF NOT EXISTS fineOffences (fid VARCHAR  NOT NULL,offence VARCHAR NOT NULL,FOREIGN KEY (fid) REFERENCES fines(fineId),PRIMARY KEY (fid, offence))");
             Log.d("chance","out2");
 
-            myDb.execSQL("INSERT INTO fines (fineId,driverLicenseNo,driverVehicleNo,fineTime,fineDate,policemanId,totalAmountPaid,fineStatus,finePlace,validUntilDate) VALUES " +
-                    "('"+fine.getFineId()+"','"+fine.getDriverLicenseNo()+"','"+fine.getDriverVehicleNo()+"','"+fine.getFineTime()+"','"+fine.getFineDate()+"','"+fine.getPolicemanId()+"','"+fine.getTotalAmountPaid()+"','"+fine.getFineStatus()+"','"+fine.getFinePlace()+"','"+fine.getValidUntilDate()+"')");
+            myDb.execSQL("INSERT INTO fines (fineId,driverLicenseNo,driverVehicleNo,fineTime,fineDate,policemanId,paidRecordedBy,unpaidRecordedBy,totalAmountPaid,fineStatus,finePlace,validUntilDate) VALUES " +
+                    "('"+fine.getFineId()+"','"+fine.getDriverLicenseNo()+"','"+fine.getDriverVehicleNo()+"','"+fine.getFineTime()+"','"+fine.getFineDate()+"','"+fine.getPolicemanId()+"','"+fine.getPaidRecordedBy()+"','"+fine.getUnpaidRecordedBy()+"','"+fine.getTotalAmountPaid()+"','"+fine.getFineStatus()+"','"+fine.getFinePlace()+"','"+fine.getValidUntilDate()+"')");
 
             Log.d("chance","out3");
             for (int i=0; i <offences.length;i++) {

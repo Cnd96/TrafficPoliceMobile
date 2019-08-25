@@ -1,10 +1,9 @@
 package com.example.chamal.trafficpolice;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.design.widget.FloatingActionButton;
@@ -17,27 +16,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class HomeActivity extends AppCompatActivity {
 
     Button mRecordFinesButton;
     FloatingActionButton mSearchDriverButton;
-    Button mCourtCasesButton;
     AutoCompleteTextView mSearchDriverText;
-
+    TextView mPolicemanIdTextView;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater=getMenuInflater();
@@ -57,7 +54,11 @@ public class HomeActivity extends AppCompatActivity {
                 editor.commit();
                 finish();
                 return true;
-                default:return  false;
+            case R.id.Outbox:
+                Intent outBoxIntent=new Intent(HomeActivity.this,OutboxActivity.class);
+                startActivity(outBoxIntent);
+                return true;
+            default: return  false;
         }
     }
 
@@ -65,6 +66,11 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        SharedPreferences prefs=getSharedPreferences(MainActivity.MAIN_PREFS,MODE_PRIVATE);
+        String policemanId=prefs.getString(MainActivity.POLICEMAN_ID_KEY,null);
+        mPolicemanIdTextView=(TextView) findViewById(R.id.policemanIdLabel);
+        mPolicemanIdTextView.setText("Policeman ID:"+policemanId);
+
 
 //        final SQLiteDatabase myDb=this.openOrCreateDatabase("Police",MODE_PRIVATE,null);
 //        myDb.execSQL("CREATE TABLE IF NOT EXISTS fines (id INT(8),licenseNo VARCHAR,vehicleNo VARCHAR,time VARCHAR," +
@@ -73,7 +79,6 @@ public class HomeActivity extends AppCompatActivity {
 
         mRecordFinesButton=(Button) findViewById(R.id.btnRecordFines);
         mSearchDriverButton=(FloatingActionButton) findViewById(R.id.btnDriverDetailsSearch);
-        mCourtCasesButton=(Button) findViewById(R.id.btnCourtCases);
         mSearchDriverText=(AutoCompleteTextView) findViewById(R.id.searchDriverText);
 
 
@@ -91,85 +96,79 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        mCourtCasesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDb();
-            }
 
-        });
 
     }
 
-    private void showDb(){
-        final SQLiteDatabase myDb=this.openOrCreateDatabase("Police",MODE_PRIVATE,null);
-        myDb.execSQL("CREATE TABLE IF NOT EXISTS fines (fineId VARCHAR,driverLicenseNo VARCHAR,driverVehicleNo VARCHAR,fineTime VARCHAR," +
-                "fineDate VARCHAR,policemanId VARCHAR,totalAmountPaid INT(6),fineStatus BOOLEAN,finePlace VARCHAR,validUntilDate VARCHAR,PRIMARY KEY (fineId))");
-        myDb.execSQL("CREATE TABLE IF NOT EXISTS fineOffences (fid VARCHAR  NOT NULL,offence VARCHAR NOT NULL,FOREIGN KEY (fid) REFERENCES fines(fineId),PRIMARY KEY (fid, offence))");
-
-
-
-        try{
-
-            Cursor c1=myDb.rawQuery("SELECT fineId from fines",null);
-            int noOfFines=c1.getCount();
-//            Log.d("chance",   Integer.toString(noOfFines));
-            if(noOfFines ==0){
-                Toast.makeText(HomeActivity.this,"No Outbox",Toast.LENGTH_SHORT).show();
-                return;
-            }
-            int fineIdIndexofFines=c1.getColumnIndex("fineId");
-            c1.moveToFirst();
-
-            for(int i=0;i<noOfFines;i++){
-                Cursor c=myDb.rawQuery("SELECT f.fineId, f.finePlace,f.driverLicenseNo,f.driverVehicleNo,f.fineTime" +
-                        ",f.validUntilDate,f.fineDate,f.policemanId,f.fineStatus,f.totalAmountPaid ,fo.offence\n" +
-                        "FROM fines f INNER JOIN fineOffences fo ON f.fineId = fo.fid where f.fineId='"+c1.getString(fineIdIndexofFines)+"'",null);
-
-                int fineIDIndex=c.getColumnIndex("fineId");
-                int finePlaceIndex=c.getColumnIndex("finePlace");
-                int driverLicenseNoIndex=c.getColumnIndex("driverLicenseNo");
-                int driverVehicleNoIndex=c.getColumnIndex("driverVehicleNo");
-                int fineTimeIndex=c.getColumnIndex("fineTime");
-                int policemanIdIndex=c.getColumnIndex("policemanId");
-                int offenceIndex=c.getColumnIndex("offence");
-                int validUntilDateIndex=c.getColumnIndex("validUntilDate");
-                int fineDateIndex=c.getColumnIndex("fineDate");
-                int fineStatusIndex=c.getColumnIndex("fineStatus");
-                int totalAmountPaid=c.getColumnIndex("totalAmountPaid");
-                int noOfOffences=c.getCount();
-                String[] offences=new String[noOfOffences];
-                c.moveToFirst();
-//                Log.d("chance",   Integer.toString(noOfOffences));
-                String fineId=c.getString(fineIDIndex);
-                Fine fine=new Fine(c.getString(fineIDIndex),c.getString(finePlaceIndex),c.getString(driverLicenseNoIndex),c.getString(driverVehicleNoIndex),
-                        c.getString(fineTimeIndex),c.getString(validUntilDateIndex),c.getString(fineDateIndex),c.getString(policemanIdIndex),Boolean.valueOf(c.getString(fineStatusIndex)),
-                        Integer.valueOf(c.getString(totalAmountPaid)));
-
-                for(int j=0;j<noOfOffences;j++){
-                    offences[j]=c.getString(offenceIndex);
-
-                    Log.d("chance",c.getString(fineIDIndex)+" "+
-                            c.getString(driverLicenseNoIndex)+" "+
-                            c.getString(policemanIdIndex)+" "+
-                            c.getString(finePlaceIndex)+" "+
-                            c.getString(fineTimeIndex)+" "+
-                            c.getString(validUntilDateIndex)+" "+
-                            c.getString(fineDateIndex)+" "+
-                            c.getString(fineStatusIndex)+" "+
-                            c.getString(totalAmountPaid)+" "+
-                            c.getString(offenceIndex)
-                    );
-
-                    c.moveToNext();
-                }
-                FineOffences fineOffences=new FineOffences(fineId,offences);
-                myDb.execSQL("DELETE from fines where fineId='"+fineId+"'");
-                myDb.execSQL("DELETE from fineOffences where fid='"+fineId+"'");
-                Log.d("chance",fineId);
-                boolean connected = false;
-                ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-
+//    private void showDb(){
+//        final SQLiteDatabase myDb=this.openOrCreateDatabase("Police",MODE_PRIVATE,null);
+//        myDb.execSQL("CREATE TABLE IF NOT EXISTS fines (fineId VARCHAR,driverLicenseNo VARCHAR,driverVehicleNo VARCHAR,fineTime VARCHAR," +
+//                "fineDate VARCHAR,policemanId VARCHAR,totalAmountPaid INT(6),fineStatus BOOLEAN,finePlace VARCHAR,validUntilDate VARCHAR,PRIMARY KEY (fineId))");
+//        myDb.execSQL("CREATE TABLE IF NOT EXISTS fineOffences (fid VARCHAR  NOT NULL,offence VARCHAR NOT NULL,FOREIGN KEY (fid) REFERENCES fines(fineId),PRIMARY KEY (fid, offence))");
+//
+//
+//
+//        try{
+//
+//            Cursor c1=myDb.rawQuery("SELECT fineId from fines",null);
+//            int noOfFines=c1.getCount();
+////            Log.d("chance",   Integer.toString(noOfFines));
+//            if(noOfFines ==0){
+//                Toast.makeText(HomeActivity.this,"No Outbox",Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//            int fineIdIndexofFines=c1.getColumnIndex("fineId");
+//            c1.moveToFirst();
+//
+//            for(int i=0;i<noOfFines;i++){
+//                Cursor c=myDb.rawQuery("SELECT f.fineId, f.finePlace,f.driverLicenseNo,f.driverVehicleNo,f.fineTime" +
+//                        ",f.validUntilDate,f.fineDate,f.policemanId,f.fineStatus,f.totalAmountPaid ,fo.offence\n" +
+//                        "FROM fines f INNER JOIN fineOffences fo ON f.fineId = fo.fid where f.fineId='"+c1.getString(fineIdIndexofFines)+"'",null);
+//
+//                int fineIDIndex=c.getColumnIndex("fineId");
+//                int finePlaceIndex=c.getColumnIndex("finePlace");
+//                int driverLicenseNoIndex=c.getColumnIndex("driverLicenseNo");
+//                int driverVehicleNoIndex=c.getColumnIndex("driverVehicleNo");
+//                int fineTimeIndex=c.getColumnIndex("fineTime");
+//                int policemanIdIndex=c.getColumnIndex("policemanId");
+//                int offenceIndex=c.getColumnIndex("offence");
+//                int validUntilDateIndex=c.getColumnIndex("validUntilDate");
+//                int fineDateIndex=c.getColumnIndex("fineDate");
+//                int fineStatusIndex=c.getColumnIndex("fineStatus");
+//                int totalAmountPaid=c.getColumnIndex("totalAmountPaid");
+//                int noOfOffences=c.getCount();
+//                String[] offences=new String[noOfOffences];
+//                c.moveToFirst();
+////                Log.d("chance",   Integer.toString(noOfOffences));
+//                String fineId=c.getString(fineIDIndex);
+//                Fine fine=new Fine(c.getString(fineIDIndex),c.getString(finePlaceIndex),c.getString(driverLicenseNoIndex),c.getString(driverVehicleNoIndex),
+//                        c.getString(fineTimeIndex),c.getString(validUntilDateIndex),c.getString(fineDateIndex),c.getString(policemanIdIndex),Boolean.valueOf(c.getString(fineStatusIndex)),
+//                        Integer.valueOf(c.getString(totalAmountPaid)));
+//
+//                for(int j=0;j<noOfOffences;j++){
+//                    offences[j]=c.getString(offenceIndex);
+//
+//                    Log.d("chance",c.getString(fineIDIndex)+" "+
+//                            c.getString(driverLicenseNoIndex)+" "+
+//                            c.getString(policemanIdIndex)+" "+
+//                            c.getString(finePlaceIndex)+" "+
+//                            c.getString(fineTimeIndex)+" "+
+//                            c.getString(validUntilDateIndex)+" "+
+//                            c.getString(fineDateIndex)+" "+
+//                            c.getString(fineStatusIndex)+" "+
+//                            c.getString(totalAmountPaid)+" "+
+//                            c.getString(offenceIndex)
+//                    );
+//
+//                    c.moveToNext();
+//                }
+//                FineOffences fineOffences=new FineOffences(fineId,offences);
+////                myDb.execSQL("DELETE from fines where fineId='"+fineId+"'");
+////                myDb.execSQL("DELETE from fineOffences where fid='"+fineId+"'");
+//                Log.d("chance",fineId);
+//                boolean connected = false;
+//                ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+//
 //                if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
 //                        connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
 //                {
@@ -197,14 +196,14 @@ public class HomeActivity extends AppCompatActivity {
 //                        Log.d("chance",jsArray.toString());
 //
 //                        AsyncHttpClient client=new AsyncHttpClient();
-//                        client.post(this,MainActivity.API+"fines",entity, "application/json",new JsonHttpResponseHandler(){
+//                        client.post(this,MainActivity.HomeIP+"fines",entity, "application/json",new JsonHttpResponseHandler(){
 //
 //                            @Override
 //                            public  void onSuccess(int statusCode, Header[] headers, JSONObject response){
 //                                try {
 //                                    Log.d("chance",response.getString("_id"));
-//                                    Cursor cd1=myDb.rawQuery("DELETE  from fines where fineId='"+response.getString("_id")+"'",null);
-//                                    Cursor cd=myDb.rawQuery("DELETE  from fineOffences where fid='"+response.getString("_id")+"'",null);
+//                                   myDb.execSQL("DELETE from fines where fineId='"+ response.getString("_id")+"'");
+//                                    myDb.execSQL("DELETE from fineOffences where fid='"+ response.getString("_id")+"'");
 //                                }catch (JSONException e){
 //                                    e.printStackTrace();
 //
@@ -230,19 +229,19 @@ public class HomeActivity extends AppCompatActivity {
 //
 //                    connected = false;
 //                }
-
-
-                Log.d("chance", "next fine");
-                c1.moveToNext();
-
-            }
-
-
-        }catch (Exception e){
-            Log.d("chance", e.getMessage());
-        }
-        Log.d("chance", "sent");
-    }
+//
+//
+//                Log.d("chance", "next fine");
+//                c1.moveToNext();
+//
+//            }
+//
+//
+//        }catch (Exception e){
+//            Log.d("chance", e.getMessage());
+//        }
+//        Log.d("chance", "sent");
+//    }
 
     private  void getDriverDetails(){
         String driverLicenseNo=mSearchDriverText.getText().toString();
@@ -275,7 +274,7 @@ public class HomeActivity extends AppCompatActivity {
         Toast.makeText(this,"Searching..", Toast.LENGTH_SHORT).show();
 
         AsyncHttpClient client=new AsyncHttpClient();
-        client.get("http://192.168.8.135:3000/api/driverFines/"+driverLicenseNo,new JsonHttpResponseHandler(){
+        client.get(MainActivity.PhoneIP +"driverFines/"+driverLicenseNo,new JsonHttpResponseHandler(){
             @Override
             public  void onSuccess(int statusCode, Header[] headers, JSONObject response){
                 Log.d("chance","success");
